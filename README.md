@@ -21,3 +21,11 @@ A TypeScript-powered web application starter with modern tools and frameworks. T
 1. Clone the repository.
 2. Install dependencies with `npm install`.
 3. Start your development server with `npm run serve:dev`.
+
+### Lichess OAuth Setup
+
+The AI challenge feature requires an OAuth token from Lichess. Create an OAuth
+application on Lichess and copy the **client ID** and **redirect URI** into
+`LichessGameViewModel.ts`. When visiting the Lichess page for the first time you
+will be redirected to Lichess to authorise the application. After authorisation,
+the token is stored in `localStorage` and used for subsequent AI challenges.
