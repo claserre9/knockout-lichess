@@ -52,7 +52,11 @@ export class LichessGameViewModel extends BaseViewModel {
         }
         try {
             const response = await this.api.challengeAi();
-            this.gameUrl(response.challenge.url);
+            if (response.challenge && response.challenge.url) {
+                this.gameUrl(response.challenge.url);
+            } else {
+                console.error("Unexpected response from Lichess", response);
+            }
         } catch (err) {
             console.error(err);
         }
