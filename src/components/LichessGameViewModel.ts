@@ -12,11 +12,7 @@ export class LichessGameViewModel extends BaseViewModel {
     constructor(context: PageJS.Context | undefined) {
         super(context);
         this.auth = new LichessAuthService("YOUR_CLIENT_ID", window.location.origin + "/lichess");
-        const token = this.auth.getAccessToken();
-        if (token) {
-            this.api = new LichessApiService(token);
-            this.isAuthenticated(true);
-        }
+        this.init();
         this.setTemplate(`
             <div>
                 <!-- ko if: isAuthenticated -->
@@ -32,15 +28,23 @@ export class LichessGameViewModel extends BaseViewModel {
         `);
     }
 
+    private async init(): Promise<void> {
+        const token = await this.auth.getAccessToken();
+        if (token) {
+            this.api = new LichessApiService(token);
+            this.isAuthenticated(true);
+        }
+    }
+
     login() {
-        this.auth.authenticate();
+        void this.auth.authenticate();
     }
 
     async startGame() {
         if (!this.api) {
-            const token = this.auth.getAccessToken();
+            const token = await this.auth.getAccessToken();
             if (!token) {
-                this.auth.authenticate();
+                void this.auth.authenticate();
                 return;
             }
             this.api = new LichessApiService(token);
