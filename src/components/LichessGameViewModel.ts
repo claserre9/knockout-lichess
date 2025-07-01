@@ -5,6 +5,7 @@ import { LichessAuthService } from "../services/LichessAuthService";
 
 export class LichessGameViewModel extends BaseViewModel {
     public gameUrl = observable<string | null>(null);
+    public boardUrl = observable<string | null>(null);
     public isAuthenticated = observable<boolean>(false);
     private api: LichessApiService | null = null;
     private auth: LichessAuthService;
@@ -18,7 +19,10 @@ export class LichessGameViewModel extends BaseViewModel {
                 <!-- ko if: isAuthenticated -->
                 <button data-bind="click: startGame">Start AI Game</button>
                 <button data-bind="click: logout">Logout</button>
-                <div data-bind="if: gameUrl">
+                <div data-bind="if: boardUrl">
+                    <iframe data-bind="attr: { src: boardUrl }" style="width: 600px; height: 397px; border:0;"></iframe>
+                </div>
+                <div data-bind="if: gameUrl" style="margin-top: 8px;">
                     <a data-bind="attr: { href: gameUrl }, text: gameUrl" target="_blank"></a>
                 </div>
                 <!-- /ko -->
@@ -46,6 +50,7 @@ export class LichessGameViewModel extends BaseViewModel {
         this.isAuthenticated(false);
         this.api = null;
         this.gameUrl(null);
+        this.boardUrl(null);
     }
 
     async startGame() {
@@ -62,6 +67,10 @@ export class LichessGameViewModel extends BaseViewModel {
             const response = await this.api.challengeAi();
             if (response.challenge && response.challenge.url) {
                 this.gameUrl(response.challenge.url);
+                const match = response.challenge.url.match(/lichess\.org\/(\w+)/);
+                if (match) {
+                    this.boardUrl(`https://lichess.org/embed/${match[1]}?theme=auto&bg=auto`);
+                }
             } else {
                 console.error("Unexpected response from Lichess", response);
             }
