@@ -17,6 +17,7 @@ export class LichessGameViewModel extends BaseViewModel {
             <div>
                 <!-- ko if: isAuthenticated -->
                 <button data-bind="click: startGame">Start AI Game</button>
+                <button data-bind="click: logout">Logout</button>
                 <div data-bind="if: gameUrl">
                     <a data-bind="attr: { href: gameUrl }, text: gameUrl" target="_blank"></a>
                 </div>
@@ -38,6 +39,13 @@ export class LichessGameViewModel extends BaseViewModel {
 
     login() {
         void this.auth.authenticate();
+    }
+
+    logout(): void {
+        this.auth.logout();
+        this.isAuthenticated(false);
+        this.api = null;
+        this.gameUrl(null);
     }
 
     async startGame() {
