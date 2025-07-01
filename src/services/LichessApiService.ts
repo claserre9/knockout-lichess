@@ -3,12 +3,12 @@ export interface AiChallengeOptions {
     color?: 'white' | 'black' | 'random';
 }
 
-export interface AiChallengeResponse {
-    challenge: {
-        id: string;
-        url: string;
-    };
+export interface AiChallenge {
+    id: string;
+    url: string;
 }
+
+export type AiChallengeResponse = AiChallenge | { challenge: AiChallenge };
 
 export class LichessApiService {
     private token: string;
