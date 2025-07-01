@@ -65,9 +65,10 @@ export class LichessGameViewModel extends BaseViewModel {
         }
         try {
             const response = await this.api.challengeAi();
-            if (response.challenge && response.challenge.url) {
-                this.gameUrl(response.challenge.url);
-                const match = response.challenge.url.match(/lichess\.org\/(\w+)/);
+            const challenge = 'challenge' in response ? response.challenge : response;
+            if (challenge && challenge.url) {
+                this.gameUrl(challenge.url);
+                const match = challenge.url.match(/lichess\.org\/(\w+)/);
                 if (match) {
                     this.boardUrl(`https://lichess.org/embed/${match[1]}?theme=auto&bg=auto`);
                 }
